@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Home Credit LAP Qualification Demo</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: Inter, "Segoe UI", Arial, sans-serif;
+      color: #172033;
+      background: #f3f6fb;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 24px; }
+    main { width: min(760px, 100%); background: #fff; border: 1px solid #e2e8f0; border-radius: 18px; box-shadow: 0 18px 55px #18274616; overflow: hidden; }
+    header { padding: 24px 28px; background: #123b71; color: #fff; }
+    h1 { font-size: 1.25rem; margin: 0 0 6px; }
+    header p { margin: 0; color: #dce8f7; font-size: .92rem; }
+    #setup { padding: 24px 28px 18px; border-bottom: 1px solid #e8edf4; }
+    label { display: block; font-weight: 650; margin-bottom: 8px; }
+    .setup-row { display: flex; gap: 10px; }
+    input { min-width: 0; flex: 1; border: 1px solid #cbd5e1; border-radius: 9px; padding: 12px 13px; font: inherit; }
+    button { border: 0; border-radius: 9px; background: #1672c4; color: #fff; padding: 12px 18px; font: inherit; font-weight: 650; cursor: pointer; }
+    button:disabled { opacity: .55; cursor: not-allowed; }
+    #chat { height: min(52vh, 500px); min-height: 300px; overflow-y: auto; padding: 22px 28px; display: flex; flex-direction: column; gap: 14px; }
+    .bubble { max-width: 85%; padding: 12px 15px; border-radius: 14px; line-height: 1.45; white-space: pre-wrap; overflow-wrap: anywhere; }
+    .assistant { align-self: flex-start; background: #edf3fa; border-bottom-left-radius: 4px; }
+    .customer { align-self: flex-end; background: #1672c4; color: #fff; border-bottom-right-radius: 4px; }
+    #composer { display: flex; gap: 10px; padding: 16px 28px 22px; border-top: 1px solid #e8edf4; }
+    #message { flex: 1; }
+    #notice { padding: 0 28px 20px; color: #64748b; font-size: .82rem; }
+    .hidden { display: none !important; }
+    #voice-panel { padding: 24px 28px; border-top: 1px solid #e8edf4; }
+    #voice-panel h2 { margin: 0 0 8px; font-size: 1.05rem; }
+    #voice-panel p { color: #64748b; font-size: .9rem; line-height: 1.5; }
+    #voice-panel .call-fields { display: grid; gap: 12px; margin: 16px 0; }
+    #voice-panel .call-fields label { margin: 0; font-size: .9rem; }
+    #voice-panel .consent { display: flex !important; gap: 10px; align-items: flex-start; font-weight: 400 !important; }
+    #voice-panel .consent input { flex: none; margin-top: 3px; }
+    #voice-status { margin-top: 14px; white-space: pre-wrap; overflow-wrap: anywhere; }
+    #voice-status a { color: #125ca7; }
+    @media (max-width: 560px) {
+      body { padding: 0; }
+      main { min-height: 100vh; border: 0; border-radius: 0; }
+      header, #setup, #chat, #composer { padding-left: 18px; padding-right: 18px; }
+      .setup-row { flex-direction: column; }
+      .bubble { max-width: 94%; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Home Credit LAP Qualification</h1>
+      <p>Interactive text demo of the voice-agent conversation flow</p>
+    </header>
+    <section id="setup">
+      <label for="customer-name">Customer name</label>
+      <div class="setup-row">
+        <input id="customer-name" value="Rahul" maxlength="80" autocomplete="off">
+        <button id="start">Start demo</button>
+      </div>
+    </section>
+    <section id="chat" aria-live="polite" aria-label="Conversation"></section>
+    <form id="composer" class="hidden">
+      <input id="message" maxlength="2000" placeholder="Type your response…" autocomplete="off" required>
+      <button id="send" type="submit">Send</button>
+    </form>
+    <section id="voice-panel">
+      <h2>Make a real voice test call with Bolna</h2>
+      <p id="bolna-state">Checking Bolna setup…</p>
+      <form id="voice-form" class="call-fields hidden">
+        <label>Recipient phone number (international format)
+          <input id="phone-number" placeholder="+919876543210" inputmode="tel" autocomplete="tel" required>
+        </label>
+        <label>Call-admin token
+          <input id="admin-token" type="password" autocomplete="off" required>
+        </label>
+        <label class="consent">
+          <input id="call-consent" type="checkbox" required>
+          <span>I am authorized to test-call this number, the recipient consents to this test, and I understand Bolna may charge for the call.</span>
+        </label>
+        <button id="place-call" type="submit">Place voice call</button>
+      </form>
+      <div id="voice-status" role="status" aria-live="polite"></div>
+    </section>
+    <div id="notice">Demo only: this app does not place real calls or submit applications. Avoid entering real personal or financial information.</div>
+  </main>
+  <script>
+    const setup = document.querySelector("#setup");
+    const chat = document.querySelector("#chat");
+    const composer = document.querySelector("#composer");
+    const nameInput = document.querySelector("#customer-name");
+    const messageInput = document.querySelector("#message");
+    const startButton = document.querySelector("#start");
+    const sendButton = document.querySelector("#send");
+    const bolnaState = document.querySelector("#bolna-state");
+    const voiceForm = document.querySelector("#voice-form");
+    const voiceStatus = document.querySelector("#voice-status");
+    const callButton = document.querySelector("#place-call");
+    let sessionId = null;
+
+    function addBubble(text, role) {
+      const bubble = document.createElement("div");
+      bubble.className = `bubble ${role}`;
+      bubble.textContent = text;
+      chat.appendChild(bubble);
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    async function postJson(path, payload) {
+      const response = await fetch(path, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || "Request failed");
+      return result;
+    }
+
+    async function checkBolnaStatus() {
+      try {
+        const response = await fetch("/api/bolna/status");
+        const result = await response.json();
+        if (result.configured) {
+          bolnaState.textContent = "Bolna credentials and call protection are configured on the server.";
+          voiceForm.classList.remove("hidden");
+        } else {
+          bolnaState.textContent = "Not configured yet. Follow the Bolna setup steps in README.md, then add the required environment variables on the server.";
+        }
+      } catch {
+        bolnaState.textContent = "Could not check Bolna setup. Refresh the page or check the server.";
+      }
+    }
+
+    async function pollCall(executionId, adminToken) {
+      const terminal = new Set(["completed", "no-answer", "busy", "failed", "canceled", "stopped", "error", "balance-low"]);
+      for (let attempt = 0; attempt < 60; attempt += 1) {
+        await new Promise(resolve => setTimeout(resolve, 5000));
+        const response = await fetch(`/api/bolna/executions/${encodeURIComponent(executionId)}`, {
+          headers: { "X-Demo-Admin-Token": adminToken }
+        });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || "Could not retrieve call status");
+        voiceStatus.textContent = `Call status: ${result.status}`;
+        if (terminal.has(result.status)) {
+          if (result.transcript) {
+            const transcript = document.createElement("p");
+            transcript.textContent = `Transcript:\n${result.transcript}`;
+            voiceStatus.appendChild(transcript);
+          }
+          if (typeof result.recording_url === "string" && result.recording_url.startsWith("https://api.bolna.ai/recordings/")) {
+            const link = document.createElement("a");
+            link.href = result.recording_url;
+            link.target = "_blank";
+            link.rel = "noopener noreferrer";
+            link.textContent = "Open call recording";
+            voiceStatus.appendChild(link);
+          }
+          return;
+        }
+      }
+      voiceStatus.textContent += "\nCall is still processing. Keep the execution ID to check it again later: " + executionId;
+    }
+
+    voiceForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      if (!document.querySelector("#call-consent").checked) return;
+      callButton.disabled = true;
+      voiceStatus.textContent = "Submitting the call request to Bolna…";
+      const adminToken = document.querySelector("#admin-token").value;
+      try {
+        const result = await postJson("/api/bolna/calls", {
+          phone_number: document.querySelector("#phone-number").value.trim(),
+          admin_token: adminToken,
+          confirm_cost_and_consent: true
+        });
+        voiceStatus.textContent = `Call queued. Execution ID: ${result.execution_id}\nStatus: ${result.status}`;
+        await pollCall(result.execution_id, adminToken);
+      } catch (error) {
+        voiceStatus.textContent = `Call error: ${error.message}`;
+      } finally {
+        callButton.disabled = false;
+      }
+    });
+
+    startButton.addEventListener("click", async () => {
+      startButton.disabled = true;
+      try {
+        const result = await postJson("/api/session", { customer_name: nameInput.value.trim() });
+        sessionId = result.session_id;
+        setup.classList.add("hidden");
+        chat.replaceChildren();
+        composer.classList.remove("hidden");
+        addBubble(result.assistant_message, "assistant");
+        messageInput.focus();
+      } catch (error) {
+        alert(error.message);
+        startButton.disabled = false;
+      }
+    });
+
+    composer.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const message = messageInput.value.trim();
+      if (!message || !sessionId) return;
+      addBubble(message, "customer");
+      messageInput.value = "";
+      sendButton.disabled = true;
+      try {
+        const result = await postJson("/api/message", { session_id: sessionId, message });
+        for (const text of result.assistant_messages) addBubble(text, "assistant");
+        if (result.done) {
+          composer.classList.add("hidden");
+          addBubble("This demo conversation has ended. Reload the page to start another.", "assistant");
+        } else {
+          messageInput.focus();
+        }
+      } catch (error) {
+        addBubble(`Error: ${error.message}`, "assistant");
+      } finally {
+        sendButton.disabled = false;
+      }
+    });
+
+    checkBolnaStatus();
+  </script>
+</body>
+</html>
