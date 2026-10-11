@@ -36,6 +36,7 @@
     #voice-panel p { color: #64748b; font-size: .9rem; line-height: 1.5; }
     #voice-panel .call-fields { display: grid; gap: 12px; margin: 16px 0; }
     #voice-panel .call-fields label { margin: 0; font-size: .9rem; }
+    #voice-panel .input-hint { display: block; margin-top: 6px; color: #64748b; font-size: .82rem; font-weight: 400; line-height: 1.4; }
     #voice-panel .consent { display: flex !important; gap: 10px; align-items: flex-start; font-weight: 400 !important; }
     #voice-panel .consent input { flex: none; margin-top: 3px; }
     #voice-status { margin-top: 14px; white-space: pre-wrap; overflow-wrap: anywhere; }
@@ -72,7 +73,8 @@
       <p id="bolna-state">Checking Bolna setup…</p>
       <form id="voice-form" class="call-fields hidden">
         <label>Recipient phone number (international format)
-          <input id="phone-number" type="password" placeholder="Enter authorized test number" inputmode="tel" autocomplete="new-password" required>
+          <input id="phone-number" type="password" placeholder="+919876543210" inputmode="tel" autocomplete="new-password" required>
+          <small class="input-hint">Include +, country code, and number. Example: +919876543210. Bolna trial accounts can call only verified numbers.</small>
         </label>
         <label>Call-admin token
           <input id="admin-token" type="password" autocomplete="off" required>
