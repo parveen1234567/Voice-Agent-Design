@@ -1,114 +1,583 @@
-# Home Credit LAP Voice Agent Project
+# 🏠 Home Credit LAP Voice Agent
 
-This project implements a reference flow for the SalesAgents AI Home Credit Loan Against Property (LAP) qualification use case. It includes a local terminal demo, a browser-based text demo, and an optional Bolna integration for real outbound voice calls.
+<p align="center">
+  <strong>An AI-powered Voice Agent solution designed for Home Credit Loan Against Property (LAP) qualification, customer eligibility assessment, lead screening, and outbound voice interactions using conversational AI and Bolna Voice Agents.</strong>
+</p>
 
-## What is included
+<p align="center">
+  <img alt="Python" src="https://img.shields.io/badge/Language-Python-3776AB?logo=python&logoColor=white">
+  <img alt="AI Agent" src="https://img.shields.io/badge/AI-Agentic%20AI-purple">
+  <img alt="Voice AI" src="https://img.shields.io/badge/Voice-Bolna-orange">
+  <img alt="Frontend" src="https://img.shields.io/badge/UI-Web%20Chat-success">
+  <img alt="Deployment" src="https://img.shields.io/badge/Deployment-Render-46E3B7">
+</p>
 
-- A structured system prompt for the voice agent
-- A deterministic conversation-state engine for qualification logic
-- A browser chat interface served by a lightweight Python web server
-- Optional outbound voice calls through a Bolna agent
-- Bolna call status, transcript, and recording link retrieval
-- A Render Blueprint configuration in `render.yaml`
-- Edge-case handling for:
-  - busy customer callback flow
-  - transfer / EMI-reduction scenarios
-  - disqualification rules
-  - out-of-order answers
-  - maximum loan cap handling
-  - final human handoff
-- Unit tests covering the most important scenarios
+<p align="center">
+  <a href="https://home-credit-lap-demo.onrender.com/">🌐 Live Demo</a> •
+  <a href="https://github.com/parveen1234567/Voice-Agent-Design">💻 Source Code</a>
+</p>
 
-## Files
+---
 
-- `system_prompt.md` — final system prompt text for a voice platform
-- `voice_agent/conversation.py` — eligibility state and business logic
-- `voice_agent/prompt_builder.py` — prompt rendering with runtime variables
-- `app.py` — terminal demo runner
-- `web_app.py` and `web/index.html` — browser demo and API
-- `voice_agent/bolna_client.py` — Bolna outbound call and execution API client
-- `render.yaml` — one-click Render service configuration
-- `tests/test_conversation.py` — coverage for the core flows
+# 🚀 Project Overview
 
-## Run the terminal demo
+The Home Credit LAP Voice Agent is an AI-driven customer qualification system designed to automate preliminary screening and eligibility assessment for Home Credit's Loan Against Property (LAP) offerings.
+
+The solution uses conversational AI to engage customers, collect eligibility-related information, evaluate responses against predefined business rules, and determine whether a customer qualifies for further processing.
+
+The application supports both text-based chat interaction and real outbound voice calls using Bolna Voice Agents.
+
+---
+
+# 💡 Problem Statement
+
+Financial institutions often spend significant time and resources conducting initial loan qualification calls.
+
+Traditional processes involve:
+
+- Manual customer calls
+- Repetitive eligibility screening
+- Sales representative workload
+- Delayed qualification decisions
+- Inconsistent customer interactions
+
+This project automates the qualification process while ensuring compliance with predefined business rules.
+
+---
+
+# 🎯 Product Value
+
+The Home Credit LAP Voice Agent helps organizations streamline loan qualification workflows.
+
+### For Customers
+
+- Quick eligibility assessment
+- Faster response times
+- Consistent communication
+- Convenient voice interactions
+
+### For Sales Teams
+
+- Automated lead qualification
+- Reduced repetitive work
+- Faster lead processing
+- Improved efficiency
+
+### For Financial Institutions
+
+- Standardized qualification process
+- Better lead management
+- Reduced operational costs
+- Increased productivity
+
+---
+
+# ✨ Core Features
+
+## 🎙️ Voice Agent Integration
+
+- Real outbound voice calls
+- AI-powered conversations
+- Human-like interaction flow
+- Bolna voice platform support
+
+---
+
+## 💬 Browser Chat Demo
+
+- Interactive web interface
+- Simulated customer conversations
+- Instant qualification testing
+
+---
+
+## ⚙️ Deterministic Qualification Engine
+
+- Business rule enforcement
+- Eligibility assessment
+- Loan qualification workflow
+- Structured conversation states
+
+---
+
+## 🔄 Conversation Flow Management
+
+Handles:
+
+- Eligibility checks
+- Customer responses
+- Qualification decisions
+- Human handoff scenarios
+
+---
+
+## 📞 Callback Flow Support
+
+Supports customer situations such as:
+
+- Busy customers
+- Call-back requests
+- Rescheduled conversations
+
+---
+
+## 💸 EMI Reduction Scenarios
+
+Handles:
+
+- Existing loan inquiries
+- Balance transfer requests
+- EMI reduction discussions
+
+---
+
+## 🚫 Disqualification Logic
+
+Supports automatic disqualification when:
+
+- Business conditions are not met
+- Customer does not satisfy requirements
+
+---
+
+## 🔀 Out-of-Order Responses
+
+The system intelligently processes:
+
+- Unexpected answers
+- Non-linear conversations
+- Follow-up clarifications
+
+---
+
+## 👨‍💼 Human Handoff Support
+
+When required:
+
+```text
+AI Agent
+    ↓
+Human Agent
+```
+
+The interaction can be escalated to a human representative.
+
+---
+
+# 🏗️ System Architecture
+
+## High-Level Architecture
+
+```text
+Customer
+    │
+    ▼
+Voice / Chat Interface
+    │
+    ▼
+Conversation Engine
+    │
+    ├── Eligibility Rules
+    ├── State Management
+    ├── Qualification Logic
+    ├── Callback Handling
+    └── Handoff Logic
+    │
+    ▼
+Decision Output
+```
+
+---
+
+## Voice Call Workflow
+
+```text
+Outbound Call
+      │
+      ▼
+Customer Answers
+      │
+      ▼
+AI Qualification Questions
+      │
+      ▼
+Eligibility Evaluation
+      │
+      ▼
+Qualified?
+   ┌─────┴─────┐
+   │           │
+  YES          NO
+   │           │
+   ▼           ▼
+Lead       Disqualified
+Forward
+```
+
+---
+
+# 📂 Project Structure
+
+```text
+Home-Credit-LAP-Voice-Agent/
+│
+├── system_prompt.md
+│   └── Voice agent instructions
+│
+├── app.py
+│   └── Terminal demo application
+│
+├── web_app.py
+│   └── Browser demo server
+│
+├── render.yaml
+│   └── Render deployment configuration
+│
+├── web/
+│   └── index.html
+│
+├── voice_agent/
+│   │
+│   ├── conversation.py
+│   │   └── Qualification business logic
+│   │
+│   ├── prompt_builder.py
+│   │   └── Dynamic prompt rendering
+│   │
+│   └── bolna_client.py
+│       └── Bolna API integration
+│
+├── tests/
+│   └── test_conversation.py
+│
+└── README.md
+```
+
+---
+
+# 🧰 Technology Stack
+
+## Backend
+
+| Technology | Purpose |
+|------------|----------|
+| Python | Core Development |
+| REST APIs | Communication |
+| JSON | Data Exchange |
+
+---
+
+## AI & Voice
+
+| Technology | Purpose |
+|------------|----------|
+| Agentic AI | Customer Conversations |
+| Bolna | Voice Calling Platform |
+| Prompt Engineering | Conversational Flow |
+| State Engine | Qualification Logic |
+
+---
+
+## Frontend
+
+| Technology | Purpose |
+|------------|----------|
+| HTML | Interface Structure |
+| CSS | Styling |
+| JavaScript | Client Interactions |
+
+---
+
+## Deployment
+
+| Technology | Purpose |
+|------------|----------|
+| Render | Cloud Hosting |
+| GitHub | Source Control |
+
+---
+
+# 🔄 Qualification Flow
+
+## Step 1: Initiate Contact
+
+```text
+Customer Contacted
+```
+
+---
+
+## Step 2: Collect Information
+
+Agent gathers:
+
+- Customer details
+- Loan requirements
+- Property information
+- Existing liabilities
+
+---
+
+## Step 3: Validate Eligibility
+
+Business rules evaluate:
+
+- Qualification criteria
+- Eligibility conditions
+- Loan requirements
+
+---
+
+## Step 4: Determine Outcome
+
+Possible outcomes:
+
+```text
+Qualified
+
+Disqualified
+
+Callback Required
+
+Transfer Required
+```
+
+---
+
+## Step 5: Final Action
+
+```text
+Qualified Leads
+       │
+       ▼
+Sales Team Follow-Up
+```
+
+---
+
+# 🚀 Running the Project
+
+## Terminal Demo
 
 ```bash
 python app.py
 ```
 
-## Run the browser demo locally
+---
 
-From the project folder:
+## Browser Demo
 
 ```bash
 python web_app.py
 ```
 
-Open <http://localhost:8000> in a browser.
+Open:
 
-## Run the tests
+```text
+http://localhost:8000
+```
+
+---
+
+## Run Tests
 
 ```bash
 python -m unittest discover -s tests -v
 ```
 
-## Connect a real voice agent with Bolna
+---
 
-This integration calls an agent that you configure in your Bolna account. It does not create an account, purchase a number, or configure speech providers automatically.
+# 📞 Bolna Voice Integration
 
-1. Create/sign in to a Bolna account at <https://platform.bolna.ai>.
-2. Create a voice agent in the Bolna dashboard. Configure its language, voice, and outbound telephony in Bolna.
-3. Copy the contents of `system_prompt.md` into that agent's system prompt. Replace the `{{...}}` context placeholders with the appropriate values or configure equivalent dynamic variables in Bolna.
-4. Save the agent and copy its agent ID.
-5. In Bolna's dashboard, create an API key under **Developers → API Keys**.
-6. Configure these environment variables on the server. Never put the Bolna API key in browser code, source control, or a public `.env` file:
+The application supports real voice calls through Bolna.
 
-   | Variable | Value |
-   | --- | --- |
-   | `BOLNA_API_KEY` | Bolna API key |
-   | `BOLNA_AGENT_ID` | ID of the agent created above |
-   | `WEB_ADMIN_TOKEN` | A long, unique private token that authorizes using the outbound-call feature |
+### Features
 
-7. Restart/redeploy the web app. When Bolna is configured, the browser page shows a **Make a real voice test call with Bolna** section.
-8. Enter a test number in E.164 format (for example, `+919876543210`), the call-admin token, and confirm you are authorized and the recipient consents. Place calls only to numbers you are authorized to contact. Bolna call usage may incur charges.
-9. The page will show the Bolna execution status and, when available, the transcript and recording link.
+- Outbound AI calls
+- Call status tracking
+- Transcript retrieval
+- Recording links
+- Voice qualification workflow
 
-Bolna's official API quickstart documents the call endpoint (`POST https://api.bolna.ai/call`) and execution lookup (`GET https://api.bolna.ai/executions/{execution_id}`): <https://www.bolna.ai/docs/quickstarts/api>. API keys are sent to Bolna from the server using bearer authentication.
+### Required Variables
 
-### Configure Bolna on Render
+```env
+BOLNA_API_KEY=your_key
 
-After creating the Render service, open its **Environment** settings and add `BOLNA_API_KEY`, `BOLNA_AGENT_ID`, and `WEB_ADMIN_TOKEN` as secret environment variables. Save changes and redeploy. Keep the service URL and admin token private; the token protects the outbound-call endpoint.
+BOLNA_AGENT_ID=your_agent_id
 
-### Configure Bolna locally in PowerShell
-
-Set the variables in the same PowerShell window before running the web server:
-
-```powershell
-$env:BOLNA_API_KEY = "your-bolna-api-key"
-$env:BOLNA_AGENT_ID = "your-bolna-agent-id"
-$env:WEB_ADMIN_TOKEN = "a-long-private-call-admin-token"
-python web_app.py
+WEB_ADMIN_TOKEN=your_admin_token
 ```
 
-Do not paste credentials into chat or commit them to the project.
+---
 
-## Deploy the app on Render
+# 🚀 Deployment
 
-1. Push this project folder to a GitHub repository.
-2. Sign in to Render and choose **New +** → **Blueprint**.
-3. Connect the GitHub repository and select the branch containing `render.yaml`.
-4. Review the `home-credit-lap-demo` web service and create it.
-5. When the deployment finishes, open the Render URL shown for the service.
+## Live Application
 
-The service uses `python web_app.py` as its start command and reads Render's `PORT` environment variable automatically. To enable real Bolna calls, also add the three Bolna-related environment variables above.
+🌐 https://home-credit-lap-demo.onrender.com/
 
-## Important limitations
+## Hosting Platform
 
-- The text demo is a browser-based simulation. The optional Bolna setup enables actual outbound phone calls through the configured Bolna agent.
-- Conversation sessions are held in server memory and may be lost when the service restarts; this is for demos, not production customer data.
-- Do not use this demo with real customer financial or property information.
-- Outbound calls incur usage charges and must comply with consent, telemarketing, and privacy requirements.
+Render
 
+## Deployment Architecture
 
-##Deploy link:
-https://home-credit-lap-demo.onrender.com/
+```text
+GitHub Repository
+        │
+        ▼
+      Render
+        │
+        ▼
+ Home Credit LAP Voice Agent
+        │
+        ▼
+ Browser Demo + Voice Integration
+```
+
+The application is deployed on Render and can be accessed directly through the provided public URL.
+
+---
+
+# 🧪 Testing & Quality Assurance
+
+Unit tests cover:
+
+✅ Customer Qualification
+
+✅ Busy Customer Callback
+
+✅ Disqualification Rules
+
+✅ EMI Transfer Scenarios
+
+✅ Out-of-Order Responses
+
+✅ Human Handoff Logic
+
+✅ State Transitions
+
+✅ Business Rule Validation
+
+---
+
+# 🧩 Challenges Faced
+
+## Conversation State Management
+
+Managing customer interactions across multiple conversation stages.
+
+### Learning
+
+State-driven workflows improve consistency and reliability.
+
+---
+
+## Voice Agent Integration
+
+Integrating conversational logic with an external voice platform.
+
+### Learning
+
+Voice experiences require robust error handling and flexible dialogue management.
+
+---
+
+## Business Rule Enforcement
+
+Ensuring customer qualification follows strict lending policies.
+
+### Learning
+
+Financial workflows require deterministic decision-making instead of generic chatbot responses.
+
+---
+
+## Edge Case Handling
+
+Managing unexpected customer behavior and response patterns.
+
+### Learning
+
+Real-world conversations rarely follow a fixed script.
+
+---
+
+# 📈 Future Enhancements
+
+Future versions could include:
+
+- 🤖 Advanced LLM-based Conversations
+- 🌐 Multi-language Support
+- 📊 Analytics Dashboard
+- 📱 WhatsApp Integration
+- 🎯 CRM Integration
+- ☎️ Automated Follow-Ups
+- 🔔 SMS Notifications
+- ☁️ Database Persistence
+- 🧠 Personalized Lead Scoring
+- 📈 AI Sales Insights
+
+---
+
+# 📚 What I Learned
+
+This project helped me gain practical experience in:
+
+- Agentic AI Systems
+- Prompt Engineering
+- State Machine Design
+- Voice Agent Development
+- Qualification Workflow Design
+- Business Rule Automation
+- API Integration
+- Conversation Management
+- Deployment on Render
+- AI-Powered Customer Engagement
+
+---
+
+# 🎯 Why This Project?
+
+This project demonstrates how conversational AI can automate structured financial qualification processes while maintaining business compliance and consistent customer interactions.
+
+Instead of relying entirely on human representatives, organizations can use AI-powered voice agents to qualify leads, improve efficiency, and reduce operational effort.
+
+> **Qualify Leads. Automate Conversations. Accelerate Lending Decisions.**
+
+---
+
+# 📌 Project Highlights
+
+- ✅ Agentic AI Architecture
+- ✅ Voice Agent Integration
+- ✅ Loan Qualification Workflow
+- ✅ Browser Chat Simulator
+- ✅ Bolna API Integration
+- ✅ Conversation State Management
+- ✅ Callback Handling
+- ✅ Human Handoff Support
+- ✅ Deployment on Render
+- ✅ Recruiter-Friendly AI Project
+
+---
+
+# 🔗 Links
+
+| Resource | Link |
+|-----------|------|
+| 🌐 Live Application | https://home-credit-lap-demo.onrender.com/ |
+| 💻 GitHub Repository | https://github.com/parveen1234567/Voice-Agent-Design |
+| 👨‍💻 GitHub Profile | https://github.com/parveen1234567 |
+| 💼 LinkedIn | https://linkedin.com/in/shaik-chinthapalli-parveen-983668257 |
+
+---
+
+# 🙌 Final Note
+
+The Home Credit LAP Voice Agent project represents my exploration of Agentic AI, voice automation, business-rule-driven conversations, and customer qualification workflows.
+
+It demonstrates how AI agents can move beyond simple chatbots to support real business processes, automate customer interactions, and improve operational efficiency in the financial services domain.
+
+> **Home Credit LAP Voice Agent — Engage. Qualify. Convert.**
